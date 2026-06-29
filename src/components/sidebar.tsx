@@ -35,6 +35,7 @@ export function Sidebar({ conversations, currentId, onNavigate }: Props) {
       <div className="p-3 border-b border-zinc-800">
         <Button
           render={<Link href="/chat" onClick={onNavigate} />}
+          nativeButton={false}
           variant="ghost"
           className="w-full justify-start gap-2 text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800 h-9"
         >
