@@ -63,7 +63,7 @@ export async function POST(req: Request) {
       { type: 'text', text: IDENTIFY_FOOD_PROMPT },
     ]
     const { text } = await generateText({
-      model: google('gemini-1.5-flash'),
+      model: google('gemini-2.5-flash'),
       messages: [{ role: 'user', content: identifyContent }],
     })
     foodName = text.trim()
@@ -110,7 +110,7 @@ export async function POST(req: Request) {
   const streamData = new StreamData()
 
   const result = streamText({
-    model: google('gemini-1.5-flash'),
+    model: google('gemini-2.5-flash'),
     system: systemPrompt,
     messages: coreMessages,
     onFinish: async ({ text }) => {
