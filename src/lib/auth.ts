@@ -1,22 +1,22 @@
 import NextAuth from 'next-auth'
-import Google from 'next-auth/providers/google'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import { prisma } from './prisma'
+import { authConfig } from '../auth.config'
 
+// Full auth config with Prisma adapter (Node.js runtime only — never imported in middleware).
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  ...authConfig,
   adapter: PrismaAdapter(prisma),
-  providers: [
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-  ],
-  session: { strategy: 'database' },
+  session: { strategy: 'jwt' },
   callbacks: {
-    session({ session, user }) {
-      session.user.id = user.id
+    session({ session, token }) {
+      // token.sub is the user ID set by NextAuth
+      if (token.sub) session.user.id = token.sub
       return session
     },
+    jwt({ token, user }) {
+      if (user?.id) token.sub = user.id
+      return token
+    },
   },
-  pages: { signIn: '/' },
 })
